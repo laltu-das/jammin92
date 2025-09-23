@@ -125,4 +125,9 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'admin_access_code' => env('ADMIN_ACCESS_CODE'),
+    'admin_email' => env('ADMIN_EMAIL'),
+    'news_api_key' => env('NEWS_API_KEY'),
+    'ticket_master_base_url' => env('TICKET_MASTER_BASE_URL'),
+    'news_base_url' => env('NEWS_BASE_URL'),
 ];

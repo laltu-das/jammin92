@@ -54,7 +54,7 @@ class AuthController extends Controller
         }
 
         // Verify admin access code first
-        $adminAccessCode = env('ADMIN_ACCESS_CODE');
+        $adminAccessCode = config('app.admin_access_code');
         if (!$adminAccessCode || $request->admin_access_code !== $adminAccessCode) {
             return back()
                 ->withErrors([
@@ -93,7 +93,7 @@ class AuthController extends Controller
         }
 
         // Verify admin access code first
-        $adminAccessCode = env('ADMIN_ACCESS_CODE');
+        $adminAccessCode = config('app.admin_access_code');
         if (!$adminAccessCode || $request->admin_access_code !== $adminAccessCode) {
             return back()
                 ->withErrors([

@@ -4,21 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Api;
 use App\Models\UploadedNews;
+use App\Services\NewsService;
+use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Log;
 
 class NewsController extends Controller
 {
-    private $baseUrl = 'https://newsapi.org/v2/everything';
-
     public function getNews()
     {
         try {
             // Get API key from environment or database
-            $apiKey = env('NEWS_API_KEY') ?: Api::getValue('news_api');
+            $apiKey = config('app.news_api_key') ?: Api::getValue('news_api');
 
             if (!$apiKey) {
-                \Log::info('NewsAPI key not configured, using fallback news');
+                Log::info('NewsAPI key not configured, using fallback news');
                 return response()->json($this->getFallbackNews());
             }
 
@@ -27,7 +28,7 @@ class NewsController extends Controller
             $cachedNews = Cache::get($cacheKey);
 
             if ($cachedNews) {
-                \Log::info('Returning cached news', ['count' => count($cachedNews)]);
+                Log::info('Returning cached news', ['count' => count($cachedNews)]);
                 return response()->json($cachedNews);
             }
 
@@ -37,11 +38,11 @@ class NewsController extends Controller
             // Cache for 30 minutes
             Cache::put($cacheKey, $news, 1800);
 
-            \Log::info('Fresh news fetched and cached', ['count' => count($news)]);
+            Log::info('Fresh news fetched and cached', ['count' => count($news)]);
             return response()->json($news);
 
-        } catch (\Exception $e) {
-            \Log::error('NewsController Error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('NewsController Error: ' . $e->getMessage());
             return response()->json($this->getFallbackNews());
         }
     }
@@ -79,13 +80,13 @@ class NewsController extends Controller
     private function fetchNewsFromAPI()
     {
         try {
-            \Log::info('Fetching news from API...');
+            Log::info('Fetching news from API...');
 
             // Get API key from environment or database
-            $apiKey = env('NEWS_API_KEY') ?: Api::getValue('news_api');
+            $apiKey = config('app.news_api_key') ?: Api::getValue('news_api');
 
             if (!$apiKey) {
-                \Log::error('NewsAPI key not found');
+                Log::error('NewsAPI key not found');
                 return $this->getFallbackNews();
             }
 
@@ -98,25 +99,25 @@ class NewsController extends Controller
                 'domains' => 'rollingstone.com,variety.com,ew.com,people.com,usmagazine.com,pitchfork.com,spin.com,nme.com'
             ];
 
-            \Log::info('API Parameters:', $params);
+            Log::info('API Parameters:', $params);
 
             $response = Http::timeout(30)
                 ->withOptions(['verify' => false]) // Disable SSL verification for development
-                ->get($this->baseUrl, $params);
+                ->get(config('app.news_base_url'), $params);
 
-            \Log::info('API Response Status:', ['status' => $response->status()]);
+            Log::info('API Response Status:', ['status' => $response->status()]);
 
             if ($response->successful()) {
                 $data = $response->json();
-                \Log::info('API Response Data:', ['total_results' => $data['totalResults'] ?? 0, 'articles_count' => count($data['articles'] ?? [])]);
+                Log::info('API Response Data:', ['total_results' => $data['totalResults'] ?? 0, 'articles_count' => count($data['articles'] ?? [])]);
                 return $this->formatNewsData($data['articles'] ?? []);
             } else {
-                \Log::error('API Response Failed:', ['status' => $response->status(), 'body' => $response->body()]);
+                Log::error('API Response Failed:', ['status' => $response->status(), 'body' => $response->body()]);
                 return $this->getFallbackNews();
             }
 
-        } catch (\Exception $e) {
-            \Log::error('News API Error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('News API Error: ' . $e->getMessage());
             return $this->getFallbackNews();
         }
     }
@@ -172,8 +173,8 @@ class NewsController extends Controller
 
             return response()->json($formattedNews);
 
-        } catch (\Exception $e) {
-            \Log::error('Error fetching uploaded news: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Error fetching uploaded news: ' . $e->getMessage());
             return response()->json([]);
         }
     }
@@ -184,7 +185,7 @@ class NewsController extends Controller
     public function getPopCultureNews()
     {
         try {
-            $newsService = new \App\Services\NewsService();
+            $newsService = new NewsService();
             $popCultureNews = $newsService->getPopCultureNews();
 
             return response()->json([
@@ -193,8 +194,8 @@ class NewsController extends Controller
                 'count' => count($popCultureNews)
             ]);
 
-        } catch (\Exception $e) {
-            \Log::error('Error fetching pop culture news: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Error fetching pop culture news: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'data' => [],
@@ -210,7 +211,7 @@ class NewsController extends Controller
     public function getEntertainmentHeadlines()
     {
         try {
-            $newsService = new \App\Services\NewsService();
+            $newsService = new NewsService();
             $headlines = $newsService->getEntertainmentHeadlines();
 
             return response()->json([
@@ -219,8 +220,8 @@ class NewsController extends Controller
                 'count' => count($headlines)
             ]);
 
-        } catch (\Exception $e) {
-            \Log::error('Error fetching entertainment headlines: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Error fetching entertainment headlines: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'data' => [],

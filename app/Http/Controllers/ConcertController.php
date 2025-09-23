@@ -13,8 +13,6 @@ use Illuminate\Support\Facades\Log;
 
 class ConcertController extends Controller
 {
-    private $ticketmasterBaseUrl = 'https://app.ticketmaster.com/discovery/v2';
-
     /**
      * Get nearby Pop concerts based on user location
      */
@@ -49,7 +47,7 @@ class ConcertController extends Controller
             }
 
             // Create cache key
-            $cacheKey = 'pop_concerts_' . round($latitude, 2) . '_' . round($longitude, 2) . '_' . $radius;
+            $cacheKey = 'pop_concerts_' . number_format($latitude, 2, '.', '') . '_' . number_format($longitude, 2, '.', '') . '_' . $radius;
 
             // Check cache first (15 minutes for location-based data)
             $cachedConcerts = Cache::get($cacheKey);
@@ -175,7 +173,7 @@ class ConcertController extends Controller
 
             \Log::info('Ticketmaster API Request', $params);
 
-            $fullUrl = $this->ticketmasterBaseUrl . '/events.json';
+            $fullUrl = config('app.ticket_master_base_url') . '/events.json';
             \Log::info('Making Ticketmaster API request', [
                 'url' => $fullUrl,
                 'params' => $params
@@ -234,7 +232,7 @@ class ConcertController extends Controller
                 'name' => $event['name'] ?? 'Unknown Event',
                 'date' => $date['localDate'] ?? null,
                 'time' => $date['localTime'] ?? null,
-                'datetime' => isset($date['dateTime']) ? $date['dateTime'] : null,
+                'datetime' => $date['dateTime'] ?? null,
                 'venue' => [
                     'name' => $venue['name'] ?? 'Unknown Venue',
                     'address' => $venue['address']['line1'] ?? '',

@@ -31,7 +31,7 @@ class ContactController extends Controller
 
         try {
             // Get admin email from environment variable
-            $adminEmail = env('ADMIN_EMAIL');
+            $adminEmail = config('app.admin_email');
 
             if (!$adminEmail) {
                 return response()->json([

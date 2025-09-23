@@ -282,6 +282,6 @@ function getTestLocationName($latitude, $longitude)
         '25.7617,-80.1918' => 'Miami, FL'
     ];
 
-    $key = round($latitude, 4) . ',' . round($longitude, 4);
+    $key = number_format($latitude, 4, '.', '') . ',' . number_format($longitude, 4, '.', '');
     return $locations[$key] ?? 'Unknown Location';
 }

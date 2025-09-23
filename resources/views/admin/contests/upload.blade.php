@@ -1,6 +1,6 @@
 @extends('layouts.admin_cloud_upload')
 
-@section('title', 'Upload Contest Images - Jammin\'')
+@section('title', 'Upload Contest Images - Jammin')
 
 @section('content')
     <div class="container mt-5">

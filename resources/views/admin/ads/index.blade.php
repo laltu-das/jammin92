@@ -109,6 +109,7 @@
             margin-right: 5px;
         }
     </style>
+@endsection
     @push('scripts')
         <script>
             // Add any additional scripts here

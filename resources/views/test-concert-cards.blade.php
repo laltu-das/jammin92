@@ -97,248 +97,248 @@
             </div>
         </div>
     </div>
+@endsection
+@push('styles')
+    <style>
+        /* Remove scrolling behavior from news section */
+        .news-container {
+            max-height: none !important;
+            overflow: visible !important;
+            overflow-y: visible !important;
+            overflow-x: visible !important;
+        }
 
-    @push('styles')
-        <style>
-            /* Remove scrolling behavior from news section */
-            .news-container {
-                max-height: none !important;
-                overflow: visible !important;
-                overflow-y: visible !important;
-                overflow-x: visible !important;
-            }
+        /* Ensure news items display properly without scroll */
+        #news-container {
+            max-height: none !important;
+            overflow: visible !important;
+        }
 
-            /* Ensure news items display properly without scroll */
-            #news-container {
-                max-height: none !important;
-                overflow: visible !important;
-            }
+        /* Remove any scroll-related styling */
+        .news-scroll-container {
+            max-height: none !important;
+            overflow: visible !important;
+            overflow-y: visible !important;
+        }
 
-            /* Remove any scroll-related styling */
-            .news-scroll-container {
-                max-height: none !important;
-                overflow: visible !important;
-                overflow-y: visible !important;
-            }
+        /* Concert Card Styles - Same as homepage */
+        .concert-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
-            /* Concert Card Styles - Same as homepage */
-            .concert-card {
-                transition: transform 0.3s ease, box-shadow 0.3s ease;
-                border: none;
-                border-radius: 12px;
-                overflow: hidden;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            }
+        .concert-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
 
-            .concert-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-            }
+        .concert-card .card-img-top {
+            border-bottom: 3px solid #0d6efd;
+        }
 
-            .concert-card .card-img-top {
-                border-bottom: 3px solid #0d6efd;
-            }
+        .concert-card .card-title {
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
 
-            .concert-card .card-title {
-                color: #2c3e50;
-                font-weight: 600;
-                font-size: 1.1rem;
-                margin-bottom: 0.5rem;
-            }
+        .concert-card .card-text {
+            color: #e74c3c;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
 
-            .concert-card .card-text {
-                color: #e74c3c;
-                font-weight: 500;
-                margin-bottom: 1rem;
-            }
+        .concert-card .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
 
-            .concert-card .btn-primary {
-                background-color: #0d6efd;
-                border-color: #0d6efd;
-                border-radius: 8px;
-                padding: 0.5rem 1rem;
-                font-weight: 500;
-                transition: all 0.3s ease;
-            }
+        .concert-card .btn-primary:hover {
+            background-color: #0b5ed7;
+            border-color: #0a58ca;
+            transform: translateY(-2px);
+        }
 
-            .concert-card .btn-primary:hover {
-                background-color: #0b5ed7;
-                border-color: #0a58ca;
-                transform: translateY(-2px);
-            }
+        .concert-card .text-muted {
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
 
-            .concert-card .text-muted {
-                font-size: 0.875rem;
-                line-height: 1.4;
-            }
+        .concert-card .text-muted i {
+            width: 16px;
+            margin-right: 6px;
+            color: #6c757d;
+        }
 
-            .concert-card .text-muted i {
-                width: 16px;
-                margin-right: 6px;
-                color: #6c757d;
-            }
+        /* Test page specific styles */
+        .test-concert-cards-page {
+            min-height: 100vh;
+            background: #f8fafc;
+            padding: 40px 0;
+        }
 
-            /* Test page specific styles */
+        .test-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .test-header h1 {
+            color: #2d3748;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .test-header p {
+            color: #718096;
+            font-size: 18px;
+            margin-bottom: 25px;
+        }
+
+        .location-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Style Info Section */
+        .style-info {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e9ecef;
+            margin-top: 50px;
+        }
+
+        .style-info h2 {
+            color: #2d3748;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 25px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-item i {
+            font-size: 36px;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .feature-item h3 {
+            color: #2d3748;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .feature-item p {
+            color: #718096;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
             .test-concert-cards-page {
-                min-height: 100vh;
-                background: #f8fafc;
-                padding: 40px 0;
-            }
-
-            .test-header {
-                text-align: center;
-                margin-bottom: 50px;
+                padding: 20px 0;
             }
 
             .test-header h1 {
-                color: #2d3748;
-                font-size: 36px;
-                font-weight: 700;
-                margin-bottom: 15px;
+                font-size: 28px;
             }
 
             .test-header p {
-                color: #718096;
-                font-size: 18px;
-                margin-bottom: 25px;
+                font-size: 16px;
             }
 
-            .location-badge {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                background: #667eea;
-                color: white;
-                padding: 8px 16px;
-                border-radius: 20px;
-                font-size: 14px;
-                font-weight: 500;
-            }
-
-            /* Style Info Section */
             .style-info {
-                background: white;
-                border-radius: 12px;
-                padding: 40px;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-                border: 1px solid #e9ecef;
-                margin-top: 50px;
-            }
-
-            .style-info h2 {
-                color: #2d3748;
-                font-size: 28px;
-                font-weight: 600;
-                margin-bottom: 30px;
-                text-align: center;
+                padding: 20px;
             }
 
             .features-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-                gap: 25px;
+                grid-template-columns: 1fr;
             }
+        }
+    </style>
+@endpush
 
-            .feature-item {
-                text-align: center;
-                padding: 25px;
-                background: #f7fafc;
-                border-radius: 8px;
-                border: 1px solid #e2e8f0;
-                transition: transform 0.2s ease, box-shadow 0.2s ease;
-            }
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add some interactive features for testing
+            const concertCards = document.querySelectorAll('.concert-card');
 
-            .feature-item:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            }
-
-            .feature-item i {
-                font-size: 36px;
-                color: #667eea;
-                margin-bottom: 15px;
-            }
-
-            .feature-item h3 {
-                color: #2d3748;
-                font-size: 18px;
-                font-weight: 600;
-                margin-bottom: 10px;
-            }
-
-            .feature-item p {
-                color: #718096;
-                font-size: 14px;
-                line-height: 1.5;
-            }
-
-            }
-
-            /* Responsive Design */
-            @media (max-width: 768px) {
-                .test-concert-cards-page {
-                    padding: 20px 0;
-                }
-
-                .test-header h1 {
-                    font-size: 28px;
-                }
-
-                .test-header p {
-                    font-size: 16px;
-                }
-
-                .style-info {
-                    padding: 20px;
-                }
-
-                .features-grid {
-                    grid-template-columns: 1fr;
-                }
-            }
-        </style>
-    @endpush
-
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                // Add some interactive features for testing
-                const concertCards = document.querySelectorAll('.concert-card');
-
-                concertCards.forEach(card => {
-                    // Add click animation
-                    card.addEventListener('click', function (e) {
-                        if (!e.target.closest('.btn')) {
-                            this.style.transform = 'scale(0.98)';
-                            setTimeout(() => {
-                                this.style.transform = '';
-                            }, 150);
-                        }
-                    });
-
-                    // Add save button functionality
-                    const saveBtn = card.querySelector('.btn-outline-secondary');
-                    if (saveBtn) {
-                        saveBtn.addEventListener('click', function (e) {
-                            e.preventDefault();
-                            const icon = this.querySelector('i');
-                            if (icon.classList.contains('fas')) {
-                                icon.classList.remove('fas');
-                                icon.classList.add('far');
-                                this.innerHTML = '<i class="far fa-heart"></i> Save';
-                            } else {
-                                icon.classList.remove('far');
-                                icon.classList.add('fas');
-                                this.innerHTML = '<i class="fas fa-heart"></i> Saved';
-                            }
-                        });
+            concertCards.forEach(card => {
+                // Add click animation
+                card.addEventListener('click', function (e) {
+                    if (!e.target.closest('.btn')) {
+                        this.style.transform = 'scale(0.98)';
+                        setTimeout(() => {
+                            this.style.transform = '';
+                        }, 150);
                     }
                 });
 
-                // Log test information
-                console.log('Concert Cards Test Page Loaded');
-                console.log('Total concert cards:', concertCards.length);
-                console.log('Grid layout:', window.getComputedStyle(document.querySelector('#test-concerts-grid')).display);
+                // Add save button functionality
+                const saveBtn = card.querySelector('.btn-outline-secondary');
+                if (saveBtn) {
+                    saveBtn.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const icon = this.querySelector('i');
+                        if (icon.classList.contains('fas')) {
+                            icon.classList.remove('fas');
+                            icon.classList.add('far');
+                            this.innerHTML = '<i class="far fa-heart"></i> Save';
+                        } else {
+                            icon.classList.remove('far');
+                            icon.classList.add('fas');
+                            this.innerHTML = '<i class="fas fa-heart"></i> Saved';
+                        }
+                    });
+                }
             });
-        </script>
-    @endpush
+
+            // Log test information
+            console.log('Concert Cards Test Page Loaded');
+            console.log('Total concert cards:', concertCards.length);
+            console.log('Grid layout:', window.getComputedStyle(document.querySelector('#test-concerts-grid')).display);
+        });
+    </script>
+@endpush
