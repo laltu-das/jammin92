@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Cache;
 use App\Models\Api;
 use App\Models\UploadedNews;
-use DOMDocument;
-use DOMXPath;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 
 class NewsController extends Controller
 {
@@ -47,6 +44,36 @@ class NewsController extends Controller
             \Log::error('NewsController Error: ' . $e->getMessage());
             return response()->json($this->getFallbackNews());
         }
+    }
+
+    private function getFallbackNews()
+    {
+        return [
+            [
+                'title' => 'New Album Release',
+                'description' => 'Top artist announces new album dropping next month with exclusive tour dates.',
+                'url' => '#',
+                'image' => null,
+                'publishedAt' => now(),
+                'source' => 'Music News'
+            ],
+            [
+                'title' => 'Interview with Rising Star',
+                'description' => 'Exclusive interview with this month\'s breakout artist on their journey to success.',
+                'url' => 'https://www.rollingstone.com/music/',
+                'image' => null,
+                'publishedAt' => now(),
+                'source' => 'Feature'
+            ],
+            [
+                'title' => 'Music Awards 2023',
+                'description' => 'Complete list of winners and highlights from this year\'s prestigious music awards.',
+                'url' => 'https://variety.com/c/music/',
+                'image' => null,
+                'publishedAt' => now(),
+                'source' => 'Awards News'
+            ]
+        ];
     }
 
     private function fetchNewsFromAPI()
@@ -97,7 +124,7 @@ class NewsController extends Controller
     private function formatNewsData($articles)
     {
         $formattedNews = [];
-        
+
         foreach (array_slice($articles, 0, 12) as $article) {
             $formattedNews[] = [
                 'title' => $article['title'] ?? 'No Title',
@@ -120,36 +147,6 @@ class NewsController extends Controller
         return strlen($text) > $length ? substr($text, 0, $length) . '...' : $text;
     }
 
-    private function getFallbackNews()
-    {
-        return [
-            [
-                'title' => 'New Album Release',
-                'description' => 'Top artist announces new album dropping next month with exclusive tour dates.',
-                'url' => '#',
-                'image' => null,
-                'publishedAt' => now(),
-                'source' => 'Music News'
-            ],
-            [
-                'title' => 'Interview with Rising Star',
-                'description' => 'Exclusive interview with this month\'s breakout artist on their journey to success.',
-                'url' => 'https://www.rollingstone.com/music/',
-                'image' => null,
-                'publishedAt' => now(),
-                'source' => 'Feature'
-            ],
-            [
-                'title' => 'Music Awards 2023',
-                'description' => 'Complete list of winners and highlights from this year\'s prestigious music awards.',
-                'url' => 'https://variety.com/c/music/',
-                'image' => null,
-                'publishedAt' => now(),
-                'source' => 'Awards News'
-            ]
-        ];
-    }
-
     /**
      * Get uploaded news articles from the database
      */
@@ -157,7 +154,7 @@ class NewsController extends Controller
     {
         try {
             $uploadedNews = UploadedNews::active()->ordered()->get();
-            
+
             $formattedNews = [];
             foreach ($uploadedNews as $news) {
                 $formattedNews[] = [
@@ -172,9 +169,9 @@ class NewsController extends Controller
                     'is_uploaded' => true // Flag to identify uploaded news
                 ];
             }
-            
+
             return response()->json($formattedNews);
-            
+
         } catch (\Exception $e) {
             \Log::error('Error fetching uploaded news: ' . $e->getMessage());
             return response()->json([]);
@@ -189,13 +186,13 @@ class NewsController extends Controller
         try {
             $newsService = new \App\Services\NewsService();
             $popCultureNews = $newsService->getPopCultureNews();
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $popCultureNews,
                 'count' => count($popCultureNews)
             ]);
-            
+
         } catch (\Exception $e) {
             \Log::error('Error fetching pop culture news: ' . $e->getMessage());
             return response()->json([
@@ -215,13 +212,13 @@ class NewsController extends Controller
         try {
             $newsService = new \App\Services\NewsService();
             $headlines = $newsService->getEntertainmentHeadlines();
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $headlines,
                 'count' => count($headlines)
             ]);
-            
+
         } catch (\Exception $e) {
             \Log::error('Error fetching entertainment headlines: ' . $e->getMessage());
             return response()->json([

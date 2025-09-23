@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Api;
+use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
@@ -14,22 +14,22 @@ class AdminController extends Controller
     {
         // Debug: Log that we're in the AdminController
         \Log::info('AdminController::index called');
-        
+
         $recentContests = \App\Models\Contest::with('images')
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();
-            
+
         $activeContests = \App\Models\Contest::where('is_active', true)
             ->where('end_date', '>=', now())
             ->count();
-            
+
         $totalContests = \App\Models\Contest::count();
         $totalImages = \App\Models\ContestImage::count();
-        
+
         // Debug: Log the view we're returning
         \Log::info('Returning admin.dashboard view');
-        
+
         return view('admin.dashboard', [
             'recentContests' => $recentContests,
             'activeContests' => $activeContests,
@@ -37,14 +37,14 @@ class AdminController extends Controller
             'totalImages' => $totalImages
         ]);
     }
-    
+
     /**
      * Show the API management page
      */
     public function apis(Request $request)
     {
         $apis = Api::orderBy('name')->get();
-        
+
         // Return JSON for AJAX requests
         if ($request->ajax() || $request->wantsJson()) {
             // Include masked values for display while keeping actual values hidden
@@ -61,7 +61,7 @@ class AdminController extends Controller
             });
             return response()->json($apisWithMaskedValues);
         }
-        
+
         return view('admin.apis', compact('apis'));
     }
 
@@ -146,7 +146,7 @@ class AdminController extends Controller
         $api->save();
 
         $status = $api->is_active ? 'activated' : 'deactivated';
-        
+
         // Handle AJAX requests
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json(['success' => true, 'message' => "API {$status} successfully!"]);

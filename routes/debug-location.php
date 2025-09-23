@@ -1,22 +1,22 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Services\LocationService;
+use Illuminate\Support\Facades\Route;
 
 // Debug route for testing IP-based location detection
-Route::get('/debug/location', function() {
+Route::get('/debug/location', function () {
     try {
         $locationService = new LocationService();
         $clientIP = $locationService->getClientIP();
         $ipLocation = $locationService->getLocationFromIP();
-        
+
         return response()->json([
             'client_ip' => $clientIP,
             'is_private_ip' => $locationService->isPrivateIP($clientIP),
             'ip_location' => $ipLocation,
             'timestamp' => now()
         ]);
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
         return response()->json([
             'error' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
@@ -25,13 +25,13 @@ Route::get('/debug/location', function() {
 });
 
 // Debug route for testing the complete concerts API without coordinates
-Route::get('/debug/concerts-auto', function() {
+Route::get('/debug/concerts-auto', function () {
     try {
         $controller = new App\Http\Controllers\ConcertController();
         $request = new Illuminate\Http\Request();
-        
+
         return $controller->getNearbyPopConcerts($request);
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
         return response()->json([
             'error' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
@@ -40,12 +40,12 @@ Route::get('/debug/concerts-auto', function() {
 });
 
 // Debug route for testing concerts with specific coordinates
-Route::get('/debug/concerts-coords', function(Illuminate\Http\Request $request) {
+Route::get('/debug/concerts-coords', function (Illuminate\Http\Request $request) {
     try {
         $latitude = $request->query('lat', 40.7128); // Default: New York
         $longitude = $request->query('lng', -74.0060); // Default: New York
         $radius = $request->query('radius', 50);
-        
+
         $controller = new App\Http\Controllers\ConcertController();
         $testRequest = new Illuminate\Http\Request([
             'latitude' => $latitude,
@@ -53,9 +53,9 @@ Route::get('/debug/concerts-coords', function(Illuminate\Http\Request $request) 
             'radius' => $radius,
             'classification' => 'Pop'
         ]);
-        
+
         $response = $controller->getNearbyPopConcerts($testRequest);
-        
+
         return response()->json([
             'test_coordinates' => [
                 'latitude' => $latitude,
@@ -66,7 +66,7 @@ Route::get('/debug/concerts-coords', function(Illuminate\Http\Request $request) 
             'api_response' => $response->getData(true),
             'timestamp' => now()
         ]);
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
         return response()->json([
             'error' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
@@ -75,21 +75,21 @@ Route::get('/debug/concerts-coords', function(Illuminate\Http\Request $request) 
 });
 
 // Test route for displaying concert cards styling with real data
-Route::get('/test-concert-cards', function() {
+Route::get('/test-concert-cards', function () {
     try {
         // Use real Ticketmaster API to get concert data
         $ticketmasterService = new App\Services\TicketmasterService();
-        
+
         // Test with New York coordinates
         $latitude = 40.7128;
         $longitude = -74.0060;
-        
+
         // Get real concert data from Ticketmaster API
         $apiResponse = $ticketmasterService->searchPopConcerts($latitude, $longitude, 50, 6);
-        
+
         // Extract concerts from API response
         $concerts = $apiResponse['concerts'] ?? [];
-        
+
         // If API fails or returns empty, fallback to mock data with real images
         if (empty($concerts)) {
             $concerts = [
@@ -197,13 +197,13 @@ Route::get('/test-concert-cards', function() {
                 ]
             ];
         }
-        
+
         return view('test-concert-cards', [
             'concerts' => $concerts,
             'location' => 'New York City, NY'
         ]);
-        
-    } catch (\Exception $e) {
+
+    } catch (Exception $e) {
         // Fallback to mock data if anything goes wrong
         $mockConcerts = [
             [
@@ -257,7 +257,7 @@ Route::get('/test-concert-cards', function() {
                 'price_range' => '$85 - $245'
             ]
         ];
-        
+
         return view('test-concert-cards', [
             'concerts' => $mockConcerts,
             'location' => 'New York City, NY (Fallback)'
@@ -266,7 +266,8 @@ Route::get('/test-concert-cards', function() {
 });
 
 // Helper function to get location name for testing
-function getTestLocationName($latitude, $longitude) {
+function getTestLocationName($latitude, $longitude)
+{
     // Simple coordinate to location name mapping for testing
     $locations = [
         '40.7128,-74.0060' => 'New York City, NY',
@@ -280,7 +281,7 @@ function getTestLocationName($latitude, $longitude) {
         '47.6062,-122.3321' => 'Seattle, WA',
         '25.7617,-80.1918' => 'Miami, FL'
     ];
-    
+
     $key = round($latitude, 4) . ',' . round($longitude, 4);
     return $locations[$key] ?? 'Unknown Location';
 }

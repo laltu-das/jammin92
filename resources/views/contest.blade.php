@@ -11,7 +11,7 @@
                     <div class="text-center mb-5">
                         <h1 class="display-5 mb-3">{{ $contest->title }}</h1>
                         <p class="lead text-muted">{{ $contest->description }}</p>
-                        
+
                         @if($contest->start_date && $contest->end_date)
                             <div class="contest-dates mt-4">
                                 <span class="badge bg-primary p-2">
@@ -30,12 +30,12 @@
                                     <div class="col-md-6 col-lg-4">
                                         <div class="card h-100 shadow-sm">
                                             @if($image->exists)
-                                                <img src="{{ $image->url }}" 
-                                                     class="card-img-top" 
+                                                <img src="{{ $image->url }}"
+                                                     class="card-img-top"
                                                      alt="{{ $image->title ?? 'Contest Image' }}"
                                                      style="height: 200px; object-fit: cover;">
                                             @else
-                                                <div class="bg-light d-flex align-items-center justify-content-center" 
+                                                <div class="bg-light d-flex align-items-center justify-content-center"
                                                      style="height: 200px;">
                                                     <div class="text-center p-3">
                                                         <i class="fas fa-image fa-3x text-muted mb-2"></i>
@@ -43,7 +43,7 @@
                                                     </div>
                                                 </div>
                                             @endif
-                                            
+
                                             @if($image->title || $image->description)
                                                 <div class="card-body">
                                                     @if($image->title)
@@ -82,13 +82,13 @@
                                     <div class="mb-3">
                                         <h5 class="text-muted mb-2">Duration</h5>
                                         <p class="mb-0">
-                                            {{ $contest->start_date->format('F j, Y') }} - 
+                                            {{ $contest->start_date->format('F j, Y') }} -
                                             {{ $contest->end_date->format('F j, Y') }}
                                         </p>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             @if($contest->rules)
                                 <div class="mt-4">
                                     <h5 class="text-muted mb-3">Contest Rules</h5>
@@ -106,7 +106,8 @@
                             <div class="card-body p-5">
                                 <i class="fas fa-trophy fa-4x text-muted mb-4"></i>
                                 <h2 class="h3 mb-3">No Active Contest</h2>
-                                <p class="text-muted mb-4">There are no active contests at the moment. Please check back later for upcoming contests and exciting opportunities to win VIP tickets!</p>
+                                <p class="text-muted mb-4">There are no active contests at the moment. Please check back
+                                    later for upcoming contests and exciting opportunities to win VIP tickets!</p>
                                 <a href="{{ url('/') }}" class="btn btn-primary px-4">
                                     <i class="fas fa-arrow-left me-2"></i> Back to Home
                                 </a>
@@ -117,76 +118,78 @@
             </div>
         </div>
     </div>
-    
+
     @push('styles')
-    <style>
-        .contest-gallery .card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .contest-gallery .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15) !important;
-        }
-        .contest-dates .badge {
-            font-size: 1rem;
-            border-radius: 50px;
-            padding: 0.5rem 1.25rem;
-        }
-        
-        /* Hide footer and all its content completely */
-        footer {
-            display: none !important;
-            visibility: hidden !important;
-            height: 0 !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            overflow: hidden !important;
-            position: absolute !important;
-            top: -9999px !important;
-            left: -9999px !important;
-            width: 0 !important;
-            border: none !important;
-            box-shadow: none !important;
-        }
-        
-        /* Hide footer container and all child elements */
-        footer *,
-        footer .container,
-        footer .row,
-        footer .col-md-4,
-        footer .footer-column,
-        footer .social-links,
-        footer h3,
-        footer p,
-        footer a {
-            display: none !important;
-            visibility: hidden !important;
-            height: 0 !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            overflow: hidden !important;
-        }
-        
-        /* Add proper spacing to prevent card overlap */
-        .contest-page-container {
-            padding-bottom: 150px;
-            min-height: calc(100vh - 150px);
-            margin-bottom: 50px;
-        }
-        
-        /* Ensure body has proper spacing */
-        body {
-            padding-bottom: 0 !important;
-            margin-bottom: 0 !important;
-        }
-        
-        /* Hide any potential footer-related elements */
-        .footer-column,
-        .social-links,
-        [class*="footer"] {
-            display: none !important;
-            visibility: hidden !important;
-        }
-    </style>
+        <style>
+            .contest-gallery .card {
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .contest-gallery .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15) !important;
+            }
+
+            .contest-dates .badge {
+                font-size: 1rem;
+                border-radius: 50px;
+                padding: 0.5rem 1.25rem;
+            }
+
+            /* Hide footer and all its content completely */
+            footer {
+                display: none !important;
+                visibility: hidden !important;
+                height: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: hidden !important;
+                position: absolute !important;
+                top: -9999px !important;
+                left: -9999px !important;
+                width: 0 !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+
+            /* Hide footer container and all child elements */
+            footer *,
+            footer .container,
+            footer .row,
+            footer .col-md-4,
+            footer .footer-column,
+            footer .social-links,
+            footer h3,
+            footer p,
+            footer a {
+                display: none !important;
+                visibility: hidden !important;
+                height: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: hidden !important;
+            }
+
+            /* Add proper spacing to prevent card overlap */
+            .contest-page-container {
+                padding-bottom: 150px;
+                min-height: calc(100vh - 150px);
+                margin-bottom: 50px;
+            }
+
+            /* Ensure body has proper spacing */
+            body {
+                padding-bottom: 0 !important;
+                margin-bottom: 0 !important;
+            }
+
+            /* Hide any potential footer-related elements */
+            .footer-column,
+            .social-links,
+            [class*="footer"] {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        </style>
     @endpush
 @endsection

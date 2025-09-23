@@ -35,7 +35,7 @@ class FooterController extends Controller
             // Company Info Section
             'brand_name' => 'required|string|max:255',
             'description' => 'required|string',
-            
+
             // Quick Links Section
             'home_link_text' => 'required|string|max:255',
             'home_link_url' => 'required|string|max:255',
@@ -47,19 +47,19 @@ class FooterController extends Controller
             'events_link_url' => 'required|string|max:255',
             'contact_link_text' => 'required|string|max:255',
             'contact_link_url' => 'required|string|max:255',
-            
+
             // Contact Info Section
             'address' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'frequency' => 'required|string|max:255',
-            
+
             // Social Media Links
             'facebook_url' => 'nullable|url|max:255',
             'instagram_url' => 'nullable|url|max:255',
             'twitter_url' => 'nullable|url|max:255',
             'youtube_url' => 'nullable|url|max:255',
-            
+
             // Copyright
             'copyright_text' => 'required|string|max:255',
         ]);

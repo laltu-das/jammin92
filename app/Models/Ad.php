@@ -33,10 +33,10 @@ class Ad extends Model
             if (!isset($this->attributes) || !array_key_exists('image_path', $this->attributes)) {
                 return null;
             }
-            
+
             // Safely get the image path using direct array access with null coalescing
             $imagePath = $this->attributes['image_path'] ?? null;
-            
+
             // If no image path is set, return null
             if (empty($imagePath)) {
                 return null;
@@ -46,28 +46,28 @@ class Ad extends Model
             if (is_string($imagePath) && (str_starts_with($imagePath, 'http') || str_starts_with($imagePath, 'https'))) {
                 return $imagePath;
             }
-            
+
             // Ensure we have a string to work with
             $path = (string)$imagePath;
-            
+
             // Convert backslashes to forward slashes and clean up the path
             $path = str_replace('\\', '/', $path);
             $path = ltrim($path, '/');
-            
+
             // Remove storage/ prefix if it exists
             if (strpos($path, 'storage/') === 0) {
                 $path = substr($path, 8);
             }
-            
+
             // Split the path into parts and encode each part
             $encodedParts = array_map('rawurlencode', explode('/', $path));
-            
+
             // Rebuild the path with encoded parts
             $encodedPath = implode('/', $encodedParts);
-            
+
             // Generate the full URL
             return asset('storage/' . ltrim($encodedPath, '/'));
-            
+
         } catch (\Exception $e) {
             \Log::error(sprintf(
                 'Error generating image URL for ad ID %s: %s\n%s',
@@ -78,7 +78,7 @@ class Ad extends Model
             return null;
         }
     }
-    
+
     /**
      * Get the URL to view this ad on the landing page
      */

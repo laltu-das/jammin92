@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ContestImage extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'contest_id',
         'image_path',
@@ -16,7 +16,7 @@ class ContestImage extends Model
         'description',
         'display_order'
     ];
-    
+
     public function contest()
     {
         return $this->belongsTo(Contest::class);

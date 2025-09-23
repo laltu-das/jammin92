@@ -32,13 +32,13 @@ class ContactMessage extends Mailable
     public function build()
     {
         return $this->subject('New Contact Message: ' . $this->subject)
-                    ->replyTo($this->email, $this->name)
-                    ->view('emails.contact-message')
-                    ->with([
-                        'name' => $this->name,
-                        'email' => $this->email,
-                        'subject' => $this->subject,
-                        'messageContent' => $this->messageContent,
-                    ]);
+            ->replyTo($this->email, $this->name)
+            ->view('emails.contact-message')
+            ->with([
+                'name' => $this->name,
+                'email' => $this->email,
+                'subject' => $this->subject,
+                'messageContent' => $this->messageContent,
+            ]);
     }
 }

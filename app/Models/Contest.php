@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Contest extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'title',
         'description',
@@ -16,13 +16,13 @@ class Contest extends Model
         'end_date',
         'is_active'
     ];
-    
+
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
         'is_active' => 'boolean'
     ];
-    
+
     public function images()
     {
         return $this->hasMany(ContestImage::class);

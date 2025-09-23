@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 
 class NewsService
 {
@@ -23,7 +23,7 @@ class NewsService
     public function getPopCultureNews()
     {
         $cacheKey = 'pop_culture_news_' . date('Y-m-d-H');
-        
+
         return Cache::remember($cacheKey, 3600, function () {
             try {
                 // Search specifically for pop music culture news
@@ -37,41 +37,7 @@ class NewsService
 
                 if ($response->successful()) {
                     $data = $response->json();
-                    
-                    if (isset($data['articles']) && !empty($data['articles'])) {
-                        return $this->formatArticles($data['articles']);
-                    }
-                }
 
-                return [];
-            } catch (\Exception $e) {
-                \Log::error('News API Error: ' . $e->getMessage());
-                return [];
-            }
-        });
-    }
-
-    /**
-     * Get top headlines from entertainment category
-     *
-     * @return array
-     */
-    public function getEntertainmentHeadlines()
-    {
-        $cacheKey = 'entertainment_headlines_' . date('Y-m-d-H');
-        
-        return Cache::remember($cacheKey, 3600, function () {
-            try {
-                $response = Http::withoutVerifying()->get($this->baseUrl . '/top-headlines', [
-                    'category' => 'entertainment',
-                    'language' => 'en',
-                    'pageSize' => 12,
-                    'apiKey' => $this->apiKey
-                ]);
-
-                if ($response->successful()) {
-                    $data = $response->json();
-                    
                     if (isset($data['articles']) && !empty($data['articles'])) {
                         return $this->formatArticles($data['articles']);
                     }
@@ -94,7 +60,7 @@ class NewsService
     private function formatArticles(array $articles)
     {
         $formatted = [];
-        
+
         foreach ($articles as $article) {
             // Skip articles without essential data
             if (empty($article['title']) || empty($article['publishedAt'])) {
@@ -131,5 +97,39 @@ class NewsService
         } catch (\Exception $e) {
             return 'Date not available';
         }
+    }
+
+    /**
+     * Get top headlines from entertainment category
+     *
+     * @return array
+     */
+    public function getEntertainmentHeadlines()
+    {
+        $cacheKey = 'entertainment_headlines_' . date('Y-m-d-H');
+
+        return Cache::remember($cacheKey, 3600, function () {
+            try {
+                $response = Http::withoutVerifying()->get($this->baseUrl . '/top-headlines', [
+                    'category' => 'entertainment',
+                    'language' => 'en',
+                    'pageSize' => 12,
+                    'apiKey' => $this->apiKey
+                ]);
+
+                if ($response->successful()) {
+                    $data = $response->json();
+
+                    if (isset($data['articles']) && !empty($data['articles'])) {
+                        return $this->formatArticles($data['articles']);
+                    }
+                }
+
+                return [];
+            } catch (\Exception $e) {
+                \Log::error('News API Error: ' . $e->getMessage());
+                return [];
+            }
+        });
     }
 }

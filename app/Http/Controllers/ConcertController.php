@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Cache;
 use App\Models\Api;
-use App\Services\TicketmasterService;
 use App\Services\LocationService;
+use App\Services\TicketmasterService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 
 class ConcertController extends Controller
 {
@@ -24,16 +24,16 @@ class ConcertController extends Controller
             $longitude = $request->input('longitude');
             $radius = $request->input('radius', 50); // Default 50 miles
             $classification = $request->input('classification', 'Pop');
-            
+
             // If no coordinates provided, try to get from IP
             if (!$latitude || !$longitude) {
                 $locationService = new LocationService();
                 $ipLocation = $locationService->getLocationFromIP();
-                
+
                 if ($ipLocation) {
                     $latitude = $ipLocation['latitude'];
                     $longitude = $ipLocation['longitude'];
-                    
+
                     \Log::info('Location detected from IP', [
                         'ip' => $locationService->getClientIP(),
                         'location' => $ipLocation
@@ -46,20 +46,20 @@ class ConcertController extends Controller
                     ], 400);
                 }
             }
-            
+
             // Create cache key
             $cacheKey = 'pop_concerts_' . round($latitude, 2) . '_' . round($longitude, 2) . '_' . $radius;
-            
+
             // Check cache first (15 minutes for location-based data)
             $cachedConcerts = Cache::get($cacheKey);
             if ($cachedConcerts) {
                 return response()->json($cachedConcerts);
             }
-            
+
             // Use TicketmasterService to fetch Pop concerts
             $ticketmasterService = new TicketmasterService();
             $result = $ticketmasterService->searchPopConcerts($latitude, $longitude, $radius);
-            
+
             // Add location information to the response
             $result['location'] = [
                 'latitude' => $latitude,
@@ -67,14 +67,14 @@ class ConcertController extends Controller
                 'radius' => $radius,
                 'detected_from' => $request->input('latitude') ? 'user_input' : 'ip_geolocation'
             ];
-            
+
             // Cache successful results
             if ($result['success']) {
                 Cache::put($cacheKey, $result, 900); // 15 minutes
             }
-            
+
             return response()->json($result);
-            
+
         } catch (\Exception $e) {
             \Log::error('Pop Concerts API Error: ' . $e->getMessage());
             return response()->json([
@@ -253,29 +253,6 @@ class ConcertController extends Controller
     }
 
     /**
-     * Fetch concerts from Eventbrite API (fallback)
-     */
-    private function fetchFromEventbrite($city = null, $latitude = null, $longitude = null)
-    {
-        try {
-            $apiKey = Api::getValue('eventbrite_api');
-
-            if (!$apiKey) {
-                \Log::info('Eventbrite API key not found, using fallback data');
-                return $this->getFallbackConcerts($city);
-            }
-
-            // Eventbrite API implementation would go here
-            // For now, return fallback data
-            return $this->getFallbackConcerts($city);
-
-        } catch (\Exception $e) {
-            \Log::error('Eventbrite fetch error: ' . $e->getMessage());
-            return $this->getFallbackConcerts($city);
-        }
-    }
-
-    /**
      * Extract price range from Ticketmaster event
      */
     private function extractPriceRange($event)
@@ -335,6 +312,38 @@ class ConcertController extends Controller
     }
 
     /**
+     * Fetch concerts from Eventbrite API (fallback)
+     */
+    private function fetchFromEventbrite($city = null, $latitude = null, $longitude = null)
+    {
+        try {
+            $apiKey = Api::getValue('eventbrite_api');
+
+            if (!$apiKey) {
+                \Log::info('Eventbrite API key not found, using fallback data');
+                return $this->getFallbackConcerts($city);
+            }
+
+            // Eventbrite API implementation would go here
+            // For now, return fallback data
+            return $this->getFallbackConcerts($city);
+
+        } catch (\Exception $e) {
+            \Log::error('Eventbrite fetch error: ' . $e->getMessage());
+            return $this->getFallbackConcerts($city);
+        }
+    }
+
+    /**
+     * Get fallback concerts when no results found
+     */
+    private function getFallbackConcerts($city = null)
+    {
+        \Log::info('No concerts found, returning empty array to show ticket booking links');
+        return [];
+    }
+
+    /**
      * Get Pop concerts for homepage from across the entire United States
      * Shows concerts from all US cities, not just one location
      */
@@ -342,10 +351,10 @@ class ConcertController extends Controller
     {
         try {
             $limit = 200; // Show more concerts for future ticket booking
-            
+
             // Create cache key for US-wide concerts
             $cacheKey = 'homepage_concerts_us';
-            
+
             // Check cache first (15 minutes)
             $cachedConcerts = Cache::get($cacheKey);
             if ($cachedConcerts) {
@@ -355,15 +364,15 @@ class ConcertController extends Controller
                     'location' => 'United States'
                 ]);
             }
-            
+
             // Use TicketmasterService to fetch US-wide concerts
             $ticketmasterService = new TicketmasterService();
             $result = $ticketmasterService->searchUSPopConcerts($limit);
-            
+
             if ($result['success']) {
                 // Cache results for 15 minutes
                 Cache::put($cacheKey, $result['concerts'], 900);
-                
+
                 return response()->json([
                     'success' => true,
                     'concerts' => $result['concerts'],
@@ -376,7 +385,7 @@ class ConcertController extends Controller
                     'concerts' => []
                 ]);
             }
-            
+
         } catch (\Exception $e) {
             Log::error('Homepage concerts error: ' . $e->getMessage());
             return response()->json([
@@ -394,7 +403,7 @@ class ConcertController extends Controller
     {
         try {
             $location = $request->input('location');
-            
+
             if (!$location || trim($location) === '') {
                 return response()->json([
                     'success' => false,
@@ -402,10 +411,10 @@ class ConcertController extends Controller
                     'concerts' => []
                 ]);
             }
-            
+
             // Create cache key for location search
             $cacheKey = 'location_concerts_' . strtolower(trim($location));
-            
+
             // Check cache first (15 minutes)
             $cachedConcerts = Cache::get($cacheKey);
             if ($cachedConcerts) {
@@ -415,17 +424,17 @@ class ConcertController extends Controller
                     'location' => trim($location)
                 ]);
             }
-            
+
             $limit = 50; // Limit for location-based search
-            
+
             // Use TicketmasterService to fetch concerts by location
             $ticketmasterService = new TicketmasterService();
             $result = $ticketmasterService->searchConcertsByLocation($location, $limit);
-            
+
             if ($result['success']) {
                 // Cache results for 15 minutes
                 Cache::put($cacheKey, $result['concerts'], 900);
-                
+
                 return response()->json([
                     'success' => true,
                     'concerts' => $result['concerts'],
@@ -438,7 +447,7 @@ class ConcertController extends Controller
                     'concerts' => []
                 ]);
             }
-            
+
         } catch (\Exception $e) {
             Log::error('Location concerts error: ' . $e->getMessage());
             return response()->json([
@@ -450,18 +459,9 @@ class ConcertController extends Controller
     }
 
     /**
-     * Get fallback concerts when no results found
-     */
-    private function getFallbackConcerts($city = null)
-    {
-        \Log::info('No concerts found, returning empty array to show ticket booking links');
-        return [];
-    }
-    
-    /**
      * Get concerts for trending/popular artists
      * Returns concerts for well-known Pop artists like Taylor Swift, Ed Sheeran, etc.
-     * 
+     *
      * @param Request $request
      * @return JsonResponse
      */
@@ -469,10 +469,10 @@ class ConcertController extends Controller
     {
         try {
             $limit = $request->input('limit', 3); // Default 3 concerts per artist
-            
+
             // Create cache key
             $cacheKey = 'trending_artists_concerts_' . $limit;
-            
+
             // Check cache first (15 minutes)
             $cachedConcerts = Cache::get($cacheKey);
             if ($cachedConcerts) {
@@ -482,15 +482,15 @@ class ConcertController extends Controller
                     'source' => 'cache'
                 ]);
             }
-            
+
             // Use TicketmasterService to fetch trending artists concerts
             $ticketmasterService = new TicketmasterService();
             $result = $ticketmasterService->getTrendingArtistsConcerts($limit);
-            
+
             if ($result['success']) {
                 // Cache results for 15 minutes
                 Cache::put($cacheKey, $result['concerts'], 900);
-                
+
                 return response()->json([
                     'success' => true,
                     'concerts' => $result['concerts'],

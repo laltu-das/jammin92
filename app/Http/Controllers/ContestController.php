@@ -19,14 +19,6 @@ class ContestController extends Controller
     }
 
     /**
-     * Show the form for creating a new contest.
-     */
-    public function create()
-    {
-        return view('admin.contests.create');
-    }
-
-    /**
      * Store a newly created contest in storage.
      */
     public function store(Request $request)
@@ -43,6 +35,14 @@ class ContestController extends Controller
 
         return redirect()->route('admin.contests.index')
             ->with('success', 'Contest created successfully!');
+    }
+
+    /**
+     * Show the form for creating a new contest.
+     */
+    public function create()
+    {
+        return view('admin.contests.create');
     }
 
     /**
@@ -90,7 +90,7 @@ class ContestController extends Controller
         return redirect()->route('admin.contests.index')
             ->with('success', 'Contest deleted successfully!');
     }
-    
+
     /**
      * Show the form for uploading images to a contest.
      */
@@ -98,7 +98,7 @@ class ContestController extends Controller
     {
         return view('admin.contests.upload', compact('contest'));
     }
-    
+
     /**
      * Store uploaded images for a contest.
      */
@@ -106,7 +106,7 @@ class ContestController extends Controller
     {
         // Determine the storage source
         $storageSource = $request->input('storage_source', 'local');
-        
+
         // Handle local file uploads
         if ($storageSource === 'local') {
             $request->validate([
@@ -114,19 +114,19 @@ class ContestController extends Controller
                 'title' => 'nullable|string|max:255',
                 'description' => 'nullable|string',
             ]);
-            
+
             if ($request->hasFile('images')) {
                 // Ensure the directory exists
                 $directory = 'contests/' . $contest->id;
                 Storage::disk('public')->makeDirectory($directory);
-                
+
                 foreach ($request->file('images') as $image) {
                     // Generate a unique filename
                     $filename = uniqid() . '.' . $image->getClientOriginalExtension();
-                    
+
                     // Store the file
                     $path = $image->storeAs($directory, $filename, 'public');
-                    
+
                     // Create the database record
                     ContestImage::create([
                         'contest_id' => $contest->id,
@@ -136,42 +136,40 @@ class ContestController extends Controller
                         'display_order' => $contest->images()->count() + 1,
                     ]);
                 }
-                
+
                 return redirect()->route('admin.contests.show', $contest)
                     ->with('success', 'Images uploaded successfully!');
             }
-            
+
             return back()->with('error', 'No images were uploaded.');
-        }
-        
-        // Handle cloud storage uploads (Google Drive, OneDrive, etc.)
+        } // Handle cloud storage uploads (Google Drive, OneDrive, etc.)
         else {
             $request->validate([
                 'cloud_file_data' => 'required',
                 'title' => 'nullable|string|max:255',
                 'description' => 'nullable|string',
             ]);
-            
+
             $cloudFiles = json_decode($request->input('cloud_file_data'), true);
-            
+
             if (empty($cloudFiles)) {
                 return back()->with('error', 'No cloud files selected.');
             }
-            
+
             $uploadedCount = 0;
-            
+
             foreach ($cloudFiles as $fileData) {
                 // Extract file information
                 $source = $fileData['source'] ?? 'Cloud Storage';
                 $fileName = $fileData['name'] ?? 'unknown_file.jpg';
                 $fileUrl = $fileData['url'] ?? null;
-                
+
                 // In a real implementation, you would download the file from the cloud storage URL
                 // For demonstration purposes, we'll create a placeholder record
-                
+
                 // Generate a unique path for the file
                 $path = 'contests/' . $contest->id . '/' . time() . '_' . $fileName;
-                
+
                 // In a real implementation, you would use something like:
                 // if ($fileUrl) {
                 //     try {
@@ -181,7 +179,7 @@ class ContestController extends Controller
                 //         continue; // Skip this file if download fails
                 //     }
                 // }
-                
+
                 // Create a record in the database
                 ContestImage::create([
                     'contest_id' => $contest->id,
@@ -190,19 +188,19 @@ class ContestController extends Controller
                     'description' => $request->description ?: 'Uploaded from ' . $source,
                     'display_order' => $contest->images()->count() + 1,
                 ]);
-                
+
                 $uploadedCount++;
             }
-            
+
             if ($uploadedCount > 0) {
                 return redirect()->route('admin.contests.show', $contest)
                     ->with('success', $uploadedCount . ' image(s) information saved from cloud storage. In a real implementation, the images would be downloaded from the cloud storage.');
             }
-            
+
             return back()->with('error', 'Failed to process cloud storage files.');
         }
     }
-    
+
     /**
      * Delete a contest image.
      */
@@ -210,7 +208,7 @@ class ContestController extends Controller
     {
         Storage::disk('public')->delete($image->image_path);
         $image->delete();
-        
+
         return back()->with('success', 'Image deleted successfully!');
     }
 }

@@ -46,156 +46,156 @@
 </div>
 
 <style>
-.pop-culture-news-section {
-    margin: 40px 0;
-}
+    .pop-culture-news-section {
+        margin: 40px 0;
+    }
 
-.news-card {
-    background: white;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
+    .news-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
 
-.news-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
+    .news-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
 
-.news-card-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-}
-
-.news-card-body {
-    padding: 20px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.news-card-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 10px;
-    color: #2c3e50;
-    line-height: 1.4;
-}
-
-.news-card-description {
-    color: #6c757d;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    margin-bottom: 15px;
-    flex: 1;
-}
-
-.news-card-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.8rem;
-    color: #6c757d;
-    margin-top: auto;
-}
-
-.news-card-source {
-    background: #e9ecef;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-weight: 500;
-}
-
-.news-card-date {
-    font-style: italic;
-}
-
-.news-card-link {
-    color: #1E3C72;
-    text-decoration: none;
-    display: block;
-}
-
-.news-card-link:hover {
-    text-decoration: none;
-}
-
-.news-card-link:hover .news-card-title {
-    color: #FFD700;
-}
-
-@media (max-width: 768px) {
     .news-card-image {
-        height: 150px;
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     }
-    
+
+    .news-card-body {
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
     .news-card-title {
-        font-size: 1rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #2c3e50;
+        line-height: 1.4;
     }
-    
+
     .news-card-description {
-        font-size: 0.85rem;
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 15px;
+        flex: 1;
     }
-}
+
+    .news-card-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-top: auto;
+    }
+
+    .news-card-source {
+        background: #e9ecef;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-weight: 500;
+    }
+
+    .news-card-date {
+        font-style: italic;
+    }
+
+    .news-card-link {
+        color: #1E3C72;
+        text-decoration: none;
+        display: block;
+    }
+
+    .news-card-link:hover {
+        text-decoration: none;
+    }
+
+    .news-card-link:hover .news-card-title {
+        color: #FFD700;
+    }
+
+    @media (max-width: 768px) {
+        .news-card-image {
+            height: 150px;
+        }
+
+        .news-card-title {
+            font-size: 1rem;
+        }
+
+        .news-card-description {
+            font-size: 0.85rem;
+        }
+    }
 </style>
 
 <script>
-function fetchPopCultureNews() {
-    const loadingEl = document.getElementById('newsLoading');
-    const errorEl = document.getElementById('newsError');
-    const gridEl = document.getElementById('newsGrid');
-    const emptyEl = document.getElementById('newsEmpty');
-    
-    // Show loading state
-    loadingEl.classList.remove('d-none');
-    errorEl.classList.add('d-none');
-    gridEl.classList.add('d-none');
-    emptyEl.classList.add('d-none');
-    
-    fetch('/api/news/pop-culture')
-        .then(response => response.json())
-        .then(data => {
-            loadingEl.classList.add('d-none');
-            
-            if (data.success && data.data && data.data.length > 0) {
-                displayNewsArticles(data.data);
-                gridEl.classList.remove('d-none');
-            } else {
-                emptyEl.classList.remove('d-none');
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching pop culture news:', error);
-            loadingEl.classList.add('d-none');
-            errorEl.classList.remove('d-none');
-            document.getElementById('newsErrorMessage').textContent = 
-                'Failed to load news. Please check your connection and try again.';
+    function fetchPopCultureNews() {
+        const loadingEl = document.getElementById('newsLoading');
+        const errorEl = document.getElementById('newsError');
+        const gridEl = document.getElementById('newsGrid');
+        const emptyEl = document.getElementById('newsEmpty');
+
+        // Show loading state
+        loadingEl.classList.remove('d-none');
+        errorEl.classList.add('d-none');
+        gridEl.classList.add('d-none');
+        emptyEl.classList.add('d-none');
+
+        fetch('/api/news/pop-culture')
+            .then(response => response.json())
+            .then(data => {
+                loadingEl.classList.add('d-none');
+
+                if (data.success && data.data && data.data.length > 0) {
+                    displayNewsArticles(data.data);
+                    gridEl.classList.remove('d-none');
+                } else {
+                    emptyEl.classList.remove('d-none');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching pop culture news:', error);
+                loadingEl.classList.add('d-none');
+                errorEl.classList.remove('d-none');
+                document.getElementById('newsErrorMessage').textContent =
+                    'Failed to load news. Please check your connection and try again.';
+            });
+    }
+
+    function displayNewsArticles(articles) {
+        const gridEl = document.getElementById('newsGrid');
+        gridEl.innerHTML = '';
+
+        articles.forEach(article => {
+            const newsCard = createNewsCard(article);
+            gridEl.appendChild(newsCard);
         });
-}
+    }
 
-function displayNewsArticles(articles) {
-    const gridEl = document.getElementById('newsGrid');
-    gridEl.innerHTML = '';
-    
-    articles.forEach(article => {
-        const newsCard = createNewsCard(article);
-        gridEl.appendChild(newsCard);
-    });
-}
+    function createNewsCard(article) {
+        const col = document.createElement('div');
+        col.className = 'col-lg-4 col-md-6';
 
-function createNewsCard(article) {
-    const col = document.createElement('div');
-    col.className = 'col-lg-4 col-md-6';
-    
-    const imageUrl = article.urlToImage || `https://picsum.photos/seed/${article.title}/400/200.jpg`;
-    
-    col.innerHTML = `
+        const imageUrl = article.urlToImage || `https://picsum.photos/seed/${article.title}/400/200.jpg`;
+
+        col.innerHTML = `
         <a href="${article.url}" target="_blank" class="news-card-link">
             <div class="news-card">
                 <img src="${imageUrl}" 
@@ -213,16 +213,16 @@ function createNewsCard(article) {
             </div>
         </a>
     `;
-    
-    return col;
-}
 
-function refreshPopCultureNews() {
-    fetchPopCultureNews();
-}
+        return col;
+    }
 
-// Initialize news fetching when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    fetchPopCultureNews();
-});
+    function refreshPopCultureNews() {
+        fetchPopCultureNews();
+    }
+
+    // Initialize news fetching when page loads
+    document.addEventListener('DOMContentLoaded', function () {
+        fetchPopCultureNews();
+    });
 </script>

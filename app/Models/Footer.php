@@ -10,7 +10,7 @@ class Footer extends Model
         // Company Info Section
         'brand_name',
         'description',
-        
+
         // Quick Links Section
         'home_link_text',
         'home_link_url',
@@ -22,23 +22,23 @@ class Footer extends Model
         'events_link_url',
         'contact_link_text',
         'contact_link_url',
-        
+
         // Contact Info Section
         'address',
         'phone',
         'email',
         'frequency',
-        
+
         // Social Media Links
         'facebook_url',
         'instagram_url',
         'twitter_url',
         'youtube_url',
-        
+
         // Copyright
         'copyright_text',
     ];
-    
+
     /**
      * Get the first footer record or create a default one
      */

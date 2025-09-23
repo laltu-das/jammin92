@@ -11,8 +11,8 @@ class AdminAuthMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
@@ -21,7 +21,7 @@ class AdminAuthMiddleware
         if (!Auth::check()) {
             // Store the intended URL for redirect after login
             $request->session()->put('url.intended', $request->fullUrl());
-            
+
             // Redirect to login page
             return redirect()->route('admin.login');
         }

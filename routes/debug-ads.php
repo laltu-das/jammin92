@@ -2,14 +2,14 @@
 
 use App\Models\Ad;
 
-Route::get('/debug/ads', function() {
+Route::get('/debug/ads', function () {
     $ads = Ad::where('is_active', true)
         ->orderBy('display_order')
         ->get();
-        
+
     return response()->json([
         'count' => $ads->count(),
-        'ads' => $ads->map(function($ad) {
+        'ads' => $ads->map(function ($ad) {
             return [
                 'id' => $ad->id,
                 'title' => $ad->title,

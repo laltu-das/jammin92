@@ -16,39 +16,16 @@ class ContestController extends Controller
         $contests = Contest::with('images')
             ->latest()
             ->paginate(10);
-            
+
         return view('admin.contests.index', compact('contests'));
-    }
-
-    public function create()
-    {
-        return view('admin.contests.create');
-    }
-
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
-            'is_active' => 'boolean',
-            'rules' => 'nullable|string',
-        ]);
-
-        $contest = Contest::create($validated);
-
-        return redirect()
-            ->route('admin.contests.show', $contest)
-            ->with('success', 'Contest created successfully!');
     }
 
     public function show(Contest $contest)
     {
-        $contest->load(['images' => function($query) {
+        $contest->load(['images' => function ($query) {
             $query->orderBy('display_order');
         }]);
-        
+
         return view('admin.contests.show', compact('contest'));
     }
 
@@ -82,7 +59,7 @@ class ContestController extends Controller
             Storage::delete('public/' . $image->image_path);
             $image->delete();
         }
-        
+
         $contest->delete();
 
         return redirect()
@@ -107,10 +84,10 @@ class ContestController extends Controller
             foreach ($request->file('images') as $index => $file) {
                 // Store the file
                 $path = $file->store("contests/{$contest->id}", 'public');
-                
+
                 // Create thumbnail
                 $this->createThumbnail(storage_path('app/public/' . $path));
-                
+
                 // Save to database
                 $contest->images()->create([
                     'image_path' => $path,
@@ -126,24 +103,47 @@ class ContestController extends Controller
             ->with('success', 'Images uploaded successfully!');
     }
 
-    public function deleteImage(ContestImage $image)
+    public function store(Request $request)
     {
-        // Delete the file
-        Storage::delete('public/' . $image->image_path);
-        
-        // Delete the record
-        $image->delete();
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+            'is_active' => 'boolean',
+            'rules' => 'nullable|string',
+        ]);
 
-        return back()->with('success', 'Image deleted successfully!');
+        $contest = Contest::create($validated);
+
+        return redirect()
+            ->route('admin.contests.show', $contest)
+            ->with('success', 'Contest created successfully!');
+    }
+
+    public function create()
+    {
+        return view('admin.contests.create');
     }
 
     protected function createThumbnail($path, $width = 800, $height = 800)
     {
         $img = Image::make($path);
-        $img->resize($width, $height, function($constraint) {
+        $img->resize($width, $height, function ($constraint) {
             $constraint->aspectRatio();
             $constraint->upsize();
         });
         $img->save($path);
+    }
+
+    public function deleteImage(ContestImage $image)
+    {
+        // Delete the file
+        Storage::delete('public/' . $image->image_path);
+
+        // Delete the record
+        $image->delete();
+
+        return back()->with('success', 'Image deleted successfully!');
     }
 }

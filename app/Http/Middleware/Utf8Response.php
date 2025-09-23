@@ -11,15 +11,15 @@ class Utf8Response
     public function handle(Request $request, Closure $next): Response
     {
         $response = $next($request);
-        
+
         // Only modify text/html responses
-        if ($response->headers->get('Content-Type') === 'text/html; charset=UTF-8' || 
+        if ($response->headers->get('Content-Type') === 'text/html; charset=UTF-8' ||
             str_contains($response->headers->get('Content-Type', ''), 'text/html')) {
             $response->header('Content-Type', 'text/html; charset=UTF-8');
-            
+
             // For HTML responses, ensure the meta charset is present
             $content = $response->getContent();
-            if (strpos($content, '<meta charset="UTF-8"') === false && 
+            if (strpos($content, '<meta charset="UTF-8"') === false &&
                 strpos($content, '<meta http-equiv="Content-Type"') === false) {
                 $content = str_replace(
                     '<head>',
@@ -29,7 +29,7 @@ class Utf8Response
                 $response->setContent($content);
             }
         }
-        
+
         return $response;
     }
 }

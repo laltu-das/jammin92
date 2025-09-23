@@ -10,7 +10,7 @@
                 <div class="col-lg-8 mx-auto text-center">
                     <h1 class="brand-font">🎵 Listen Live</h1>
                     <p>Tune in to our live radio stream 24/7</p>
-                    
+
                     <!-- Live Radio Player -->
                     <div class="text-center my-4">
                         <audio id="live-audio" controls autoplay style="width: 100%; max-width: 500px;">
