@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Ad;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 
 class AdController extends Controller
@@ -12,6 +14,7 @@ class AdController extends Controller
     public function index()
     {
         $ads = Ad::orderBy('display_order')->get();
+
         return view('admin.ads.index', compact('ads'));
     }
 
@@ -34,8 +37,8 @@ class AdController extends Controller
     /**
      * Toggle the active status of an ad.
      *
-     * @param \App\Models\Ad $ad
-     * @return \Illuminate\Http\Response
+     * @param Ad $ad
+     * @return JsonResponse
      */
     public function toggleStatus(Ad $ad)
     {

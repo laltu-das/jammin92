@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Api;
 use App\Services\LocationService;
 use App\Services\TicketmasterService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class ConcertController extends Controller
 {
     private $ticketmasterBaseUrl = 'https://app.ticketmaster.com/discovery/v2';
-    private $eventbriteBaseUrl = 'https://www.eventbriteapi.com/v3';
 
     /**
      * Get nearby Pop concerts based on user location

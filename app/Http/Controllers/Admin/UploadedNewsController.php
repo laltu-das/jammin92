@@ -16,6 +16,7 @@ class UploadedNewsController extends Controller
     public function index()
     {
         $news = UploadedNews::active()->ordered()->get();
+
         return view('admin.uploaded_news.index', compact('news'));
     }
 
